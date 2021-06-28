@@ -19,7 +19,6 @@ import mysql.connector
 
 
 red_led = LED(17)
-pir = MotionSensor(21)
 buzzer = Buzzer(23)
 
 #phpdatabase
@@ -45,9 +44,21 @@ SERIAL_PORT = "/dev/ttyS0"
 ser = serial.Serial(SERIAL_PORT, baudrate = 9600, timeout=5)
 
 
+GPIO.setup(26, GPIO.IN)
+GPIO.setup(4, GPIO.IN)
+
 while True:
     #Initiate Alarm
-    pir.wait_for_motion()
+    state=GPIO.input(26)
+    state2=GPIO.input(4)
+    
+    if state==1:
+        print("Sensor 1 is on")
+        
+    if state2==1:
+        print("Sensor 2 is on")
+
+    if state==1 or state2==1:
     print("Motion Detected")
     red_led.on()
     buzzer.on()
@@ -95,8 +106,7 @@ while True:
     db.commit()
 
     #STOP Alarm
-    pir.wait_for_no_motion()
-    print("Motion Stopped")
     red_led.off()
     buzzer.off()
-
+    
+GPIO.cleanup()
