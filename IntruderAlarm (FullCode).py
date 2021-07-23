@@ -41,6 +41,8 @@ ser = serial.Serial(SERIAL_PORT, baudrate = 9600, timeout=5)
 
 red_led = LED(17)
 buzzer = Buzzer(23)
+pir = MotionSensor(26)
+pir2 = MotionSensor(4)
 GPIO.setup(26, GPIO.IN)
 GPIO.setup(4, GPIO.IN)
 
@@ -104,8 +106,10 @@ while True:
         db.commit()
         
 
-    #STOP Alarm
+        #STOP Alarm
+        pir.wait_for_no_motion() and pir2.wait_for_no_motion()
         red_led.off()
         buzzer.off()
+        print("Motion stopped...")
 
 GPIO.cleanup()
